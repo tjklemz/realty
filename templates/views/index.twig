@@ -1,0 +1,71 @@
+{% extends "../layouts/default.twig" %}
+
+{% block content %}
+	<div class="container search">
+		<form id="search" method="GET" action="/">
+			<div class="form-group">
+				<label for="search-mlsid">MLS#</label>
+				<input id="search-mlsid" name="mlsid" class="form-control" placeholder="MLS#"/>
+			</div>
+			<div class="form-group">
+				<label for="search-suburb">Suburb</label>
+				<input id="search-suburb" name="suburb" class="form-control" placeholder="Suburb"/>
+			</div>
+			<div class="form-group">
+				<label for="search-squarefeet">Square Feet</label>
+				<input id="search-squarefeet" name="squarefeet" class="form-control" placeholder="Minimum square feet..."/>
+			</div>
+			<div class="form-group">
+				<label for="search-bedrooms">Bedrooms</label>
+				<select class="form-control" id="search-bedrooms" name="bedrooms">
+					<option value="any">Any</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4+</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="search-bathrooms">Bathrooms</label>
+				<select class="form-control" id="search-bathrooms" name="bathrooms">
+					<option value="any">Any</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4+</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+	</div>
+	<div class="container">
+		{% if properties.length %}
+			{% for property in properties %}
+			<div class="property">
+				<h2>MLS#: {{ property.mlsid }}
+					<span class="pull-right text-muted">{{ property.listedOn|date("d M Y") }}</span>
+				</h2>
+
+				<div class="row details">
+					<p>${{ property.price|number_format }}</p>
+					<p>{{ property.location.street1 }}</p>
+					<p>{{ property.location.suburb }}, {{ property.location.state }}</p>
+					<p>Bedrooms: {{ property.bedrooms }}</p>
+					<p>Bathrooms: {{ property.bathrooms }}</p>
+					<p>{{ property.description.brief }}</p>
+				</div>
+
+				<div class="row gallery-images">
+					{% for image in property.photos %}
+						<div class="col-xs-6 col-sm-4 col-md-3 gallery-image">
+							<img src="{{ image.secure_url }}" class="img-rounded">
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			{% endfor %}
+		{% else %}
+			<h3 class="text-muted">There are no properties listed.</h3>
+		{% endif %}
+	</div>
+{% endblock %}
